@@ -11,7 +11,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Coloured-glaze/gg" // 注册了 jpg png gif
+	"github.com/FloatTech/gg" // 注册了 jpg png gif
+	"github.com/FloatTech/imgfactory"
 	"github.com/sirupsen/logrus"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
@@ -19,7 +20,6 @@ import (
 
 	fcext "github.com/FloatTech/floatbox/ctxext"
 	"github.com/FloatTech/floatbox/file"
-	"github.com/FloatTech/floatbox/img/writer"
 	"github.com/FloatTech/floatbox/math"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
@@ -40,7 +40,7 @@ const (
 
 var (
 	// 底图类型列表
-	table = [...]string{"车万", "DC4", "爱因斯坦", "星空列车", "樱云之恋", "富婆妹", "李清歌", "公主连结", "原神", "明日方舟", "碧蓝航线", "碧蓝幻想", "战双", "阴阳师", "赛马娘", "东方归言录", "奇异恩典", "夏日口袋", "ASoul"}
+	table = [...]string{"车万", "DC4", "爱因斯坦", "星空列车", "樱云之恋", "富婆妹", "李清歌", "公主连结", "原神", "明日方舟", "碧蓝航线", "碧蓝幻想", "战双", "阴阳师", "赛马娘", "东方归言录", "奇异恩典", "夏日口袋", "ASoul", "Hololive"}
 	// 映射底图与 index
 	index = make(map[string]uint8)
 	// 签文
@@ -53,7 +53,7 @@ func init() {
 		DisableOnDefault: false,
 		Brief:            "每日运势",
 		Help: "- 运势 | 抽签\n" +
-			"- 设置底图[车万 | DC4 | 爱因斯坦 | 星空列车 | 樱云之恋 | 富婆妹 | 李清歌 | 公主连结 | 原神 | 明日方舟 | 碧蓝航线 | 碧蓝幻想 | 战双 | 阴阳师 | 赛马娘 | 东方归言录 | 奇异恩典 | 夏日口袋 | ASoul]",
+			"- 设置底图[车万 | DC4 | 爱因斯坦 | 星空列车 | 樱云之恋 | 富婆妹 | 李清歌 | 公主连结 | 原神 | 明日方舟 | 碧蓝航线 | 碧蓝幻想 | 战双 | 阴阳师 | 赛马娘 | 东方归言录 | 奇异恩典 | 夏日口袋 | ASoul | Hololive]",
 		PublicDataFolder: "Fortune",
 	})
 	_ = os.RemoveAll(cache)
@@ -230,7 +230,7 @@ func draw(back image.Image, title, txt string, f io.Writer) (int64, error) {
 			}
 		}
 	}
-	return writer.WriteTo(canvas.Image(), f)
+	return imgfactory.WriteTo(canvas.Image(), f)
 }
 
 func offest(total, now int, distance float64) float64 {
